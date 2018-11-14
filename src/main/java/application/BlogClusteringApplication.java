@@ -1,8 +1,14 @@
 package application;
 
+import java.util.List;
+
+import application.clustering.KMeansClusteringService;
+import application.objects.ClusterVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
@@ -13,8 +19,11 @@ public class BlogClusteringApplication {
 		SpringApplication.run(BlogClusteringApplication.class, args);
 	}
 
-	@GetMapping("/")
-	String getHello(){
-		return "hello";
+	@Autowired
+	KMeansClusteringService kMeansClusteringService;
+
+	@GetMapping("/kmeans/{amountOfClusters}")
+	List<ClusterVO> kMeansClustering(@PathVariable Integer amountOfClusters){
+		return kMeansClusteringService.cluster(amountOfClusters);
 	}
 }
