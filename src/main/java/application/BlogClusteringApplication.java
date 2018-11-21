@@ -3,7 +3,7 @@ package application;
 import java.util.List;
 
 import application.clustering.KMeansClusteringService;
-import application.objects.ClusterVO;
+import application.objects.ClusterDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,7 +23,7 @@ public class BlogClusteringApplication {
 	KMeansClusteringService kMeansClusteringService;
 
 	@GetMapping("/kmeans/{amountOfClusters}")
-	List<ClusterVO> kMeansClustering(@PathVariable Integer amountOfClusters){
+	List<ClusterDto> kMeansClustering(@PathVariable Integer amountOfClusters){
 		return kMeansClusteringService.cluster(amountOfClusters);
 	}
 }

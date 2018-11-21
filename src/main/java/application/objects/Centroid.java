@@ -11,8 +11,10 @@ public class Centroid implements PearsonComparable {
 	private Map<String, Double> wordsToAmountUsed;
 	private Set<Blog> assignedBlogs;
 	private Set<Blog> previousAssignments;
+	private int id;
 
-	public Centroid(Map<String, Double> wordsToAmountUsed){
+	public Centroid(int id, Map<String, Double> wordsToAmountUsed){
+		this.id = id;
 		this.wordsToAmountUsed = wordsToAmountUsed;
 		assignedBlogs = new HashSet<>();
 	}
@@ -26,6 +28,10 @@ public class Centroid implements PearsonComparable {
 		return assignedBlogs;
 	}
 
+	public int getId() {
+		return id;
+	}
+
 	public void clearAssignments(){
 		previousAssignments = assignedBlogs;
 		assignedBlogs = new HashSet<>();
@@ -37,11 +43,11 @@ public class Centroid implements PearsonComparable {
 
 	public void centerBetweenAssignedBlogs() {
 		if(assignedBlogs.size() > 0){
-			wordsToAmountUsed.entrySet().forEach(this::updateToAverageWordCountBetweenAssignedBlogs);
+			wordsToAmountUsed.entrySet().forEach(this::updateToAverageWordCountOfAssignedBlogs);
 		}
 	}
 
-	private void updateToAverageWordCountBetweenAssignedBlogs(Map.Entry<String, Double> entry){
+	private void updateToAverageWordCountOfAssignedBlogs(Map.Entry<String, Double> entry){
 		double totalUsage = assignedBlogs.stream().mapToDouble(b -> b.getWordsToAmountUsed().get(entry.getKey())).sum();
 		entry.setValue(totalUsage / assignedBlogs.size());
 	}

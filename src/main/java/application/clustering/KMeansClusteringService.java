@@ -1,5 +1,6 @@
 package application.clustering;
 
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toMap;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 import application.dataset.handler.DatasetHandler;
 import application.objects.Blog;
 import application.objects.Centroid;
-import application.objects.ClusterVO;
+import application.objects.ClusterDto;
 import application.objects.Word;
 import application.pearson.PearsonCorrelationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class KMeansClusteringService {
 	@Autowired
 	private PearsonCorrelationService pearsonCorrelationService;
 
-	public List<ClusterVO> cluster(int amountOfClusters){
+	public List<ClusterDto> cluster(int amountOfClusters){
 		List<Centroid> centroids = generateCentroids(amountOfClusters);
 
 		List<Blog> blogs = datasetHandler.getBlogs();
@@ -45,7 +46,7 @@ public class KMeansClusteringService {
 			assignmentsUpdated = centroids.stream().anyMatch(Centroid::hasNewAssignments);
 		}
 
-		return centroids.stream().map(ClusterVO::new).collect(Collectors.toList());
+		return centroids.stream().map(ClusterDto::new).collect(Collectors.toList());
 	}
 
 	private void assignToClosestCentroid(Blog b, List<Centroid> centroids) {
@@ -59,7 +60,7 @@ public class KMeansClusteringService {
 			}
 		}
 
-		closest.assign(b);
+		ofNullable(closest).ifPresent(centroid -> centroid.assign(b));
 	}
 
 
@@ -67,8 +68,8 @@ public class KMeansClusteringService {
 		List<Word> datasetWords = datasetHandler.getWords();
 
 		List<Centroid> centroids = new ArrayList<>();
-		for(int i = 0; i < amountOfClusters; i++){
-			centroids.add(new Centroid(generateRandomWordMap(datasetWords)));
+		for(int i = 1; i <= amountOfClusters; i++){
+			centroids.add(new Centroid(i, generateRandomWordMap(datasetWords)));
 		}
 
 		return centroids;

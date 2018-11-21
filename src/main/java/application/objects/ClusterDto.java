@@ -4,14 +4,14 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 
-public class ClusterVO {
+public class ClusterDto {
 	List<String> blogs;
 	String title;
 
 
-	public ClusterVO(Centroid centroid){
+	public ClusterDto(Centroid centroid){
 		this.blogs = centroid.getAssignedBlogs().stream().map(Blog::getBlogName).collect(toList());
-		this.title = "Centroid - " + centroid.hashCode();
+		this.title = "Centroid - " + centroid.getId();
 	}
 
 	public String getTitle() {
